@@ -1,7 +1,12 @@
 import type { Account } from '@/domain/accounts'
 import type { ServerData } from '@/domain/types'
 
-const API_BASE = (import.meta.env.VITE_API_BASE_URL ?? '/api').replace(/\/$/, '')
+const configuredApiBase = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '')
+const API_BASE = configuredApiBase
+  ? configuredApiBase.endsWith('/api')
+    ? configuredApiBase
+    : `${configuredApiBase}/api`
+  : '/api'
 
 type ApiEnvelope<T> = { data: T; error?: string }
 
