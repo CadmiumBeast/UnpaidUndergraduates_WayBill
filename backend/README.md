@@ -32,6 +32,11 @@ Check it with:
 curl http://localhost:3000/api/health
 ```
 
+For Vercel, set the project root to `backend` and use the `vercel-build`
+script. It runs Prisma migrations and the idempotent seed against the hosted
+`DATABASE_URL` before building the API. The Vercel database URL must point to
+the hosted PostgreSQL provider, not `localhost`.
+
 ## Demo accounts
 
 All accounts use PIN `1234`:
