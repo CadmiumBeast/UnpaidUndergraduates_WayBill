@@ -1,0 +1,269 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  DISPATCHER
+  LOADER
+  DRIVER
+  MANAGER
+}
+
+enum OrderStatus {
+  NEXT_RUN
+  CONFIRMED
+  PLANNED
+  LOADED
+  OUT
+  DELIVERED
+  PARTIAL
+  REFUSED
+  FAILED
+  DEFERRED
+}
+
+enum Temp {
+  CHILLED
+  AMBIENT
+}
+
+enum VehicleStatus {
+  AVAILABLE
+  IN_WORKSHOP
+  BROKEN_DOWN
+}
+
+enum TripStatus {
+  DRAFT
+  PUBLISHED
+  LOADING
+  READY
+  DEPARTED
+  DONE
+  STRANDED
+}
+
+enum SyncStatus {
+  PENDING
+  APPLIED
+  CONFLICT
+  RESOLVED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  pinHash   String
+  name      String
+  role      Role
+  title     String
+  depot     String?
+  vehicleId String?
+  outletId  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  auditLogs AuditLog[]
+  events    DeliveryEvent[]
+  outlet    Outlet? @relation(fields: [outletId], references: [id])
+}
+
+model Outlet {
+  id          String   @id
+  name        String
+  brand       String
+  district    String
+  depot       String
+  dock        String
+  parking     String
+  address     String
+  contact     String
+  windowOpen  String
+  windowClose String
+  mallWindow  String?
+  createdAt   DateTime @default(now())
+
+  orders Order[]
+  users  User[]
+}
+
+model Vehicle {
+  id           String        @id
+  plate        String
+  type         String
+  temp         String
+  weightCapKg  Float
+  volumeCapM3  Float
+  kmPerL       Float
+  weeklyQuotaL Float
+  usedL        Float         @default(0)
+  depot        String
+  status       VehicleStatus @default(AVAILABLE)
+  driver       String
+  createdAt    DateTime      @default(now())
+
+  trips Trip[]
+}
+
+model Order {
+  id                 String      @id @default(cuid())
+  ref                String      @unique
+  outletId           String
+  brand              String
+  district           String
+  depot              String
+  temp               Temp
+  units              Int
+  weightKg           Float
+  volumeM3           Float
+  status             OrderStatus @default(CONFIRMED)
+  placedAt           DateTime    @default(now())
+  deferredReason     String?
+  deferredAt         DateTime?
+  deferredYesterday  Boolean     @default(false)
+  daysSinceLastServed Int         @default(0)
+  handoffCode        String?
+  planVersion        Int         @default(0)
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  outlet         Outlet          @relation(fields: [outletId], references: [id])
+  tripStop       TripStop?
+  deliveryEvents DeliveryEvent[]
+  receipt        Receipt?
+  syncEvents     SyncEvent[]
+}
+
+model Plan {
+  id          String     @id @default(cuid())
+  depot       String
+  version     Int        @default(1)
+  status      TripStatus @default(DRAFT)
+  publishedAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  trips Trip[]
+}
+
+model Trip {
+  id          String     @id @default(cuid())
+  planId      String
+  vehicleId   String
+  tripNo      Int
+  brand       String
+  district    String
+  depot       String
+  status      TripStatus @default(DRAFT)
+  version     Int        @default(1)
+  seal        String?
+  departedAt  DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  plan    Plan       @relation(fields: [planId], references: [id], onDelete: Cascade)
+  vehicle Vehicle    @relation(fields: [vehicleId], references: [id])
+  stops   TripStop[]
+  events  DeliveryEvent[]
+
+  @@unique([planId, vehicleId, tripNo])
+}
+
+model TripStop {
+  id          String      @id @default(cuid())
+  tripId      String
+  orderId     String      @unique
+  stopNumber  Int
+  loadState   String      @default("PENDING")
+  loadIssue   Json?
+  deliveredAt DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  trip  Trip  @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  order Order @relation(fields: [orderId], references: [id])
+}
+
+model DeliveryEvent {
+  id             String   @id
+  tripId         String
+  orderId        String
+  actorId        String
+  kind           String
+  payload        Json
+  recordedOffline Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  trip   Trip  @relation(fields: [tripId], references: [id])
+  order  Order @relation(fields: [orderId], references: [id])
+  actor  User  @relation(fields: [actorId], references: [id])
+
+  @@index([orderId, createdAt])
+}
+
+model Receipt {
+  id             String   @id @default(cuid())
+  orderId        String   @unique
+  unitsReceived  Int
+  issueKind      String?
+  issueNote      String?
+  createdAt      DateTime @default(now())
+
+  order Order @relation(fields: [orderId], references: [id])
+}
+
+model SyncEvent {
+  id             String     @id
+  orderId        String
+  actorId        String
+  deviceId       String
+  planVersion    Int
+  action         String
+  payload        Json
+  status         SyncStatus @default(PENDING)
+  resolution     String?
+  createdAt      DateTime   @default(now())
+  resolvedAt     DateTime?
+
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@index([orderId, status])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String?
+  outletId  String?
+  title     String
+  body      String
+  kind      String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String
+  action    String
+  entity    String
+  entityId  String
+  payload   Json?
+  createdAt DateTime @default(now())
+
+  actor User @relation(fields: [actorId], references: [id])
+
+  @@index([entity, entityId, createdAt])
+}
+
+model WorldState {
+  id        String   @id
+  version   Int      @default(1)
+  state     Json
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
