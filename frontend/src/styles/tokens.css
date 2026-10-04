@@ -1,0 +1,128 @@
+/*
+  THE STYLE GUIDE LIVES HERE.
+  Every colour, font and radius in the app comes from these variables.
+  When the team changes the style guide, change the values in this file only,
+  then run `npm run tokens` to refresh design/tokens.json for Figma.
+*/
+
+:root {
+  /* Surfaces */
+  --background: #f4f7f8;
+  --foreground: #1d2a33;
+  --card: #ffffff;
+  --card-foreground: #1d2a33;
+  --muted: #e8eef1;
+  --muted-foreground: #566772;
+  --border: #cbd7dd;
+  --input: #a4b4bd;
+  --ring: #46657a;
+
+  /* Brand */
+  --primary: #46657a;
+  --primary-foreground: #ffffff;
+  --secondary: #82939d;
+  --secondary-foreground: #ffffff;
+  --accent: #e2ebef;
+  --accent-foreground: #334c5c;
+  --destructive: #b84a46;
+  --destructive-foreground: #ffffff;
+
+  /* Brand tags (Fresh / Style / Tech) */
+  --brand-fresh: #2f7a62;
+  --brand-fresh-bg: #dcede6;
+  --brand-style: #8b5c78;
+  --brand-style-bg: #eee3eb;
+  --brand-tech: #4d5d69;
+  --brand-tech-bg: #e2e8eb;
+
+  /* Temperature tags */
+  --chilled: #4b8ea8;
+  --chilled-bg: #dcecf2;
+  --ambient: #687782;
+  --ambient-bg: #e8edef;
+
+  /* Status set: solid, tint, text-on-tint. Always paired with an icon and a word. */
+  --served: #2f7a62;
+  --served-bg: #dcede6;
+  --served-fg: #205441;
+  --ontime: #496f9b;
+  --ontime-bg: #dfe8f3;
+  --ontime-fg: #355579;
+  --late: #b27a2b;
+  --late-bg: #f3e5c9;
+  --late-fg: #79531d;
+  --deferred: #b84a46;
+  --deferred-bg: #f4d9d7;
+  --deferred-fg: #873936;
+  --conflict: #765a8a;
+  --conflict-bg: #e8deed;
+  --conflict-fg: #59436b;
+  --syncing: #2a817e;
+  --syncing-bg: #d8ece9;
+  --syncing-fg: #205f5d;
+  --offline: #68736f;
+  --offline-bg: #e1e7e4;
+  --offline-fg: #4d5955;
+
+  /* Shape and type */
+  --radius: 0.625rem;
+  --font-display: 'Plus Jakarta Sans Variable', 'Inter Variable', system-ui, sans-serif;
+  --font-body: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --tap-min: 3rem;
+}
+
+/* Driver and loader work before sunrise and in glare, so they run in dark mode. */
+[data-mode='dark'] {
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+  --card: #1e293b;
+  --card-foreground: #f1f5f9;
+  --muted: #263349;
+  --muted-foreground: #94a3b8;
+  --border: #334155;
+  --input: #475569;
+  --ring: #60a5fa;
+
+  --primary: #60a5fa;
+  --primary-foreground: #0f172a;
+  --secondary: #22d3ee;
+  --secondary-foreground: #083344;
+  --accent: #263349;
+  --accent-foreground: #f1f5f9;
+  --destructive: #f87171;
+  --destructive-foreground: #0f172a;
+
+  --brand-fresh: #8fd0b2;
+  --brand-fresh-bg: #21483e;
+  --brand-style: #f29a8c;
+  --brand-style-bg: #5a3531;
+  --brand-tech: #bfd0d2;
+  --brand-tech-bg: #35484b;
+
+  --chilled: #8dc9d8;
+  --chilled-bg: #23434c;
+  --ambient: #c2d0cc;
+  --ambient-bg: #354541;
+
+  --served: #8fd0b2;
+  --served-bg: #21483e;
+  --served-fg: #b2e2c9;
+  --ontime: #9bbce0;
+  --ontime-bg: #263f5c;
+  --ontime-fg: #c0d8f0;
+  --late: #e2b36e;
+  --late-bg: #554222;
+  --late-fg: #f0cc91;
+  --deferred: #ef8b83;
+  --deferred-bg: #5a302e;
+  --deferred-fg: #f5aaa4;
+  --conflict: #c5add2;
+  --conflict-bg: #463850;
+  --conflict-fg: #dcc9e6;
+  --syncing: #87cbc5;
+  --syncing-bg: #214a47;
+  --syncing-fg: #b0e2dd;
+  --offline: #bdcbc6;
+  --offline-bg: #354541;
+  --offline-fg: #d5e0dc;
+}

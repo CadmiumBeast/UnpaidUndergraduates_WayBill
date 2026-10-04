@@ -1,0 +1,149 @@
+@import 'tailwindcss';
+@import './styles/tokens.css';
+
+@custom-variant dark (&:where([data-mode='dark'], [data-mode='dark'] *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-brand-fresh: var(--brand-fresh);
+  --color-brand-fresh-bg: var(--brand-fresh-bg);
+  --color-brand-style: var(--brand-style);
+  --color-brand-style-bg: var(--brand-style-bg);
+  --color-brand-tech: var(--brand-tech);
+  --color-brand-tech-bg: var(--brand-tech-bg);
+  --color-chilled: var(--chilled);
+  --color-chilled-bg: var(--chilled-bg);
+  --color-ambient: var(--ambient);
+  --color-ambient-bg: var(--ambient-bg);
+
+  --color-served: var(--served);
+  --color-served-bg: var(--served-bg);
+  --color-served-fg: var(--served-fg);
+  --color-ontime: var(--ontime);
+  --color-ontime-bg: var(--ontime-bg);
+  --color-ontime-fg: var(--ontime-fg);
+  --color-late: var(--late);
+  --color-late-bg: var(--late-bg);
+  --color-late-fg: var(--late-fg);
+  --color-deferred: var(--deferred);
+  --color-deferred-bg: var(--deferred-bg);
+  --color-deferred-fg: var(--deferred-fg);
+  --color-conflict: var(--conflict);
+  --color-conflict-bg: var(--conflict-bg);
+  --color-conflict-fg: var(--conflict-fg);
+  --color-syncing: var(--syncing);
+  --color-syncing-bg: var(--syncing-bg);
+  --color-syncing-fg: var(--syncing-fg);
+  --color-offline: var(--offline);
+  --color-offline-bg: var(--offline-bg);
+  --color-offline-fg: var(--offline-fg);
+
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 6px);
+
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-body);
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+  button {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+  :focus-visible {
+    outline: 3px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
+@keyframes waybill-reveal-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes waybill-route-pulse {
+  0%, 100% { opacity: 0.45; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+.reveal-up {
+  animation: waybill-reveal-up 520ms ease-out both;
+}
+
+.route-pulse {
+  animation: waybill-route-pulse 1.8s ease-in-out infinite;
+}
+
+/* Ticket-style card: small notches on both sides, used for trips and orders. */
+.ticket {
+  --notch: 9px;
+  -webkit-mask:
+    radial-gradient(circle var(--notch) at 0 50%, #0000 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle var(--notch) at 100% 50%, #0000 97%, #000) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle var(--notch) at 0 50%, #0000 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle var(--notch) at 100% 50%, #0000 97%, #000) right / 51% 100% no-repeat;
+}
+
+/* Ink-stamp mark for DELIVERED / DEFERRED. */
+.stamp {
+  display: inline-block;
+  border: 2px solid currentColor;
+  border-radius: 6px;
+  padding: 0.1rem 0.55rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(-4deg);
+  opacity: 0.92;
+}
+
+.safe-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
