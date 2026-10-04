@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Waybill backend
 
-## Getting Started
+This is the backend API for the Waybill delivery workflow. It is a Next.js App Router application with route handlers, PostgreSQL persistence through Prisma, cookie-based JWT sessions, seeded demo accounts and an offline sync endpoint.
 
-First, run the development server:
+## Requirements
+
+- Node.js 20+
+- Docker Desktop, for local PostgreSQL
+
+No third-party API keys are required for local development. The only local secret is `JWT_SECRET`.
+
+## Run locally
 
 ```bash
+cp .env.example .env
+npm install
+docker compose up -d postgres
+npm run db:push
+npm run db:seed
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The API runs at `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+For a separately deployed frontend, set `FRONTEND_ORIGIN` in `.env` to the
+frontend origin. The local Vite frontend proxies `/api` to this server, so no
+frontend API URL is needed during local development.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Check it with:
 
-## Learn More
+```bash
+curl http://localhost:3000/api/health
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Demo accounts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+All accounts use PIN `1234`:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Staff ID | Role | Device |
+| --- | --- | --- |
+| `kasun` | Dispatcher | Desktop |
+| `sandun` | Loader | Tablet |
+| `ruwan` | Driver | Phone |
+| `tharindu` | Store manager | Phone or desktop |
 
-## Deploy on Vercel
+## API workflow
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. `POST /api/auth/login` with `{ "username": "tharindu", "pin": "1234" }`.
+2. `POST /api/orders` as the store manager.
+3. `GET /api/orders` as the dispatcher.
+4. `POST /api/plans` as the dispatcher with a vehicle and order assignment.
+5. `POST /api/plans/:id/publish`.
+6. `GET /api/trips` as the loader and update stops through `POST /api/trips/:id/loading`.
+7. Seal through `POST /api/trips/:id/ready`.
+8. Start the trip through `POST /api/trips/:id/start` as the driver.
+9. Record a delivery through `POST /api/trips/:id/stops/:stopId/outcome`.
+10. Confirm receipt through `POST /api/orders/:id/receipt` as the store manager.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Drivers can send offline events in batches to `POST /api/sync`. If an event was created against an older plan version, the API stores it as a conflict instead of silently overwriting the newer plan. Resolve it with `POST /api/sync/:id/resolve`.
+
+## Frontend integration boundary
+
+The current `waybill-app` frontend is local-first so its existing offline and
+demo workflow remains usable. When a user is online and signed in, login is
+validated by this API, each state-changing UI action persists the complete
+workflow snapshot through `PUT /api/state`, and every open client polls
+`GET /api/state` to receive newer changes from other roles or devices.
+
+The explicit role-based endpoints listed below are also available for a later
+endpoint-by-endpoint migration. That deeper migration would replace the
+frontend's browser planner mutations with individual order, plan, loading,
+delivery and receipt API calls; it is not required for the current integrated
+demo flow.
+
+## Useful commands
+
+```bash
+npm run lint
+npm run build
+npm run db:studio
+```
+
+Do not commit `.env` or competition datasets. Commit `.env.example` only.
