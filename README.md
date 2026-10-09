@@ -5,6 +5,10 @@ React application and [`backend/`](./backend) contains the Next.js API,
 PostgreSQL schema and authentication. Keep both applications in this one
 repository; do not add either repository as a nested Git repository.
 
+The separate Datathon work is in [`datathon/`](./datathon). It is intentionally
+kept separate from the Hackathon application because the competition treats
+the Datathon as an independent submission.
+
 ## Submission details
 
 Use these links in the submission form:
