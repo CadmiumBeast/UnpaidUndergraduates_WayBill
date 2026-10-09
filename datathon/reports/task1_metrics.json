@@ -1,0 +1,9 @@
+{
+  "validation_cutoff": "2025-09-13 00:00:00",
+  "validation_rows": 18372,
+  "service_mae_minutes": 5.0296,
+  "late_accuracy": 0.8971,
+  "late_roc_auc": 0.9419,
+  "service_label": "leave_outlet_time - max(actual_arrival, window_open)",
+  "late_label": "actual_arrival > window_close"
+}

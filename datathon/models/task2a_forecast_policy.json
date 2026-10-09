@@ -1,0 +1,5 @@
+{
+  "method": "0.65 same ISO-week historical mean + 0.35 recent eight-week mean",
+  "chilled_rule": "Only Fresh contributes chilled volume; Style and Tech are zero",
+  "leakage_control": "Forecast uses only order history before the requested forecast week"
+}

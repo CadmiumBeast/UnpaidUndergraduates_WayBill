@@ -1,0 +1,13 @@
+{
+  "priority": [
+    "deferred_yesterday",
+    "days_since_last_served",
+    "chilled",
+    "larger volume"
+  ],
+  "served_orders": 63,
+  "deferred_orders": 22,
+  "vehicles_used": 28,
+  "trips_used": 46,
+  "constraints": "Available vehicles only; depot, temperature, van-only access, weight, volume, delivery/mall windows, fuel quotas, trip count and time budgets checked."
+}
