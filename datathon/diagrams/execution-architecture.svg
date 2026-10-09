@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="380" viewBox="0 0 1200 380">
+  <style>text{font-family:Arial,sans-serif;fill:#17212b} .box{fill:#f4f7fa;stroke:#496b82;stroke-width:2} .arrow{stroke:#496b82;stroke-width:3;marker-end:url(#a)} .small{font-size:18px} .title{font-size:24px;font-weight:bold}</style>
+  <defs><marker id="a" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L10,3 L0,6 z" fill="#496b82"/></marker></defs>
+  <text x="40" y="42" class="title">Reproducible execution boundary</text>
+  <rect x="40" y="105" width="250" height="165" rx="14" class="box"/><text x="65" y="145" class="title">Local workspace</text><text x="65" y="185" class="small">datathon/data/</text><text x="65" y="215" class="small">Git-ignored raw files</text>
+  <rect x="365" y="105" width="300" height="165" rx="14" class="box"/><text x="390" y="145" class="title">solution.py</text><text x="390" y="185" class="small">pandas + scikit-learn</text><text x="390" y="215" class="small">deterministic batch run</text>
+  <rect x="740" y="105" width="180" height="165" rx="14" class="box"/><text x="765" y="145" class="title">Notebook</text><text x="765" y="185" class="small">reruns</text><text x="765" y="215" class="small">checks</text>
+  <rect x="995" y="105" width="165" height="165" rx="14" class="box"/><text x="1020" y="145" class="title">Zip</text><text x="1020" y="185" class="small">CSV +</text><text x="1020" y="215" class="small">models/docs</text>
+  <path d="M290 187 H365" class="arrow"/><path d="M665 187 H740" class="arrow"/><path d="M920 187 H995" class="arrow"/>
+</svg>

@@ -18,6 +18,9 @@ coverage/
 
 # OS/editor files
 .DS_Store
+
+# Datathon supplied data is competition material and must not be committed.
+/datathon/data/
 *.swp
 
 # Logs
